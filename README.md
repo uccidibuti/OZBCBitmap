@@ -48,7 +48,7 @@ bitmaps with all bits unsetted and then with a minimal size.
 
 ## OZBC compared with EWAH and uncompressed Bitmap
 The benchmarks compares the size of the Uncompressed,
-EWAH<uint16_t> and OZBC bitmap index that indexes
+EWAH(uint16_t) and OZBC bitmap index that indexes
 N=100000 random values included in 0,K-1 range. 
 
 |-     |Uncompressed index size|EWAH index size|OZBC index size|

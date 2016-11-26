@@ -35,9 +35,9 @@ efficient mode.
 Unlike WAH, EWAH, COMPAX and others compressed bitmap which
 can compress also sequences of bits=1 and ensure that in the
 worse case the size of a compressed bitmap is the same of
-uncompressed bitmap, OZBC can compress only sequences of 
+a uncompressed bitmap, OZBC can compress only sequences of 
 bits=0 and in the worse case the size of a compressed bitmap
-is twice of uncompressed bitmap.
+is twice of a uncompressed bitmap.
 
 For this reason OZBC isn't designed for general purposes
 but in "bitmap indexes on K-cardinality scenario" there
@@ -51,18 +51,23 @@ The benchmark compares the size of the Uncompressed,
 [EWAH] and OZBC bitmap index that indexes
 N=100000 random values included in 0,K-1 range. 
 
-|-     |Uncompressed index size|EWAH32 index size|EWAH16 index size|OZBC index size|
-|------|-----------------------|-----------------|-----------------|---------------|
-|K=16  |              200KBytes|        196Kbytes|        174Kbytes|       161KByte|
-|K=32  |              400KBytes|        347Kbytes|        255Kbytes|       179KByte|
-|K=64  |              799KBytes|        508Kbytes|        316Kbytes|       189KByte|
-|K=128 |             1599KBytes|        631Kbytes|        355Kbytes|       195KByte|
-|K=256 |             3193KBytes|        708Kbytes|        377Kbytes|       202KByte|
-|K=512 |             6371KBytes|        753Kbytes|        387Kbytes|       229KByte|
-|K=1024|            12676KBytes|        776Kbytes|        397Kbytes|       279KByte|
-|K=2048|            25089KBytes|        787Kbytes|        426Kbytes|       335KByte|
-|K=4096|            49170KBytes|        793Kbytes|        507Kbytes|       386KByte|
-|K=8192|            93918KBytes|        796Kbytes|        675Kbytes|       439KByte|
+The index size rappresent the effective cost to save K bitmaps on disk.
+
+|-      |Uncompressed index size|EWAH32 index size|EWAH16 index size|OZBC index size|
+|-------|-----------------------|-----------------|-----------------|---------------|
+|K=16   |              200KBytes|        197Kbytes|        174Kbytes|       161KByte|
+|K=32   |              400KBytes|        347Kbytes|        255Kbytes|       179KByte|
+|K=64   |              799KBytes|        508Kbytes|        317Kbytes|       189KByte|
+|K=128  |             1599KBytes|        633Kbytes|        357Kbytes|       195KByte|
+|K=256  |             3193KBytes|        713Kbytes|        380Kbytes|       202KByte|
+|K=512  |             6371KBytes|        760Kbytes|        396Kbytes|       229KByte|
+|K=1024 |            12676KBytes|        793Kbytes|        413Kbytes|       279KByte|
+|K=2048 |            25089KBytes|        820Kbytes|        459Kbytes|       335KByte|
+|K=4096 |            49170KBytes|        859Kbytes|        573Kbytes|       386KByte|
+|K=8192 |            93918KBytes|        928Kbytes|        675Kbytes|       439KByte|
+|K=16384|           171575KBytes|       1060Kbytes|       1237Kbytes|       516KByte|
+|K=32768|           282254KBytes|       1329Kbytes|       1932Kbytes|       653KByte|
+|K=65536|           399388KBytes|       1905Kbytes|       2941Kbytes|       919KByte|
 
 [EWAH]: https://github.com/lemire/EWAHBoolArray
 

@@ -48,21 +48,23 @@ bitmaps with all bits unsetted and then with a minimal size.
 
 ## OZBC compared with EWAH and uncompressed Bitmap
 The benchmark compares the size of the Uncompressed,
-EWAH(uint16_t) and OZBC bitmap index that indexes
+[EWAH] and OZBC bitmap index that indexes
 N=100000 random values included in 0,K-1 range. 
 
-|-     |Uncompressed index size|EWAH index size|OZBC index size|
-|------|-----------------------|---------------|---------------|
-|K=16  |              200KBytes|      174Kbytes|       161KByte|
-|K=32  |              400KBytes|      255Kbytes|       179KByte|
-|K=64  |              799KBytes|      316Kbytes|       189KByte|
-|K=128 |             1599KBytes|      355Kbytes|       195KByte|
-|K=256 |             3193KBytes|      377Kbytes|       202KByte|
-|K=512 |             6371KBytes|      387Kbytes|       229KByte|
-|K=1024|            12676KBytes|      397Kbytes|       279KByte|
-|K=2048|            25089KBytes|      426Kbytes|       335KByte|
-|K=4096|            49170KBytes|      507Kbytes|       386KByte|
-|K=8192|            93918KBytes|      675Kbytes|       439KByte|
+|-     |Uncompressed index size|EWAH32 index size|EWAH16 index size|OZBC index size|
+|------|-----------------------|-----------------|-----------------|---------------|
+|K=16  |              200KBytes|        196Kbytes|        174Kbytes|       161KByte|
+|K=32  |              400KBytes|        347Kbytes|        255Kbytes|       179KByte|
+|K=64  |              799KBytes|        508Kbytes|        316Kbytes|       189KByte|
+|K=128 |             1599KBytes|        631Kbytes|        355Kbytes|       195KByte|
+|K=256 |             3193KBytes|        708Kbytes|        377Kbytes|       202KByte|
+|K=512 |             6371KBytes|        753Kbytes|        387Kbytes|       229KByte|
+|K=1024|            12676KBytes|        776Kbytes|        397Kbytes|       279KByte|
+|K=2048|            25089KBytes|        787Kbytes|        426Kbytes|       335KByte|
+|K=4096|            49170KBytes|        793Kbytes|        507Kbytes|       386KByte|
+|K=8192|            93918KBytes|        796Kbytes|        675Kbytes|       439KByte|
+
+[EWAH]: https://github.com/lemire/EWAHBoolArray
 
 ## How to compile
 To compile and generate static library "lib/libOZBC":

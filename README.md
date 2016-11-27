@@ -119,4 +119,4 @@ to compress longer sequences of bits=0.
 
 The project is in progress [OZBCv2]
 
-[OZBCv2] : https://github.com/uccidibuti/OZBCv2
+[OZBCv2]: https://github.com/uccidibuti/OZBCv2

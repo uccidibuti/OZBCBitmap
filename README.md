@@ -73,10 +73,10 @@ The index size rappresent the effective cost to save K bitmaps on disk.
 
 ## How to compile
 To compile and generate static library "lib/libOZBC":
-    make
+    |make|
 
 To run main test:
-    make test 
+    |make test| 
 
 ## Example
 See [main_test].

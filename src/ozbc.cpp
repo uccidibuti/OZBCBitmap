@@ -21,19 +21,17 @@ void OZBCBitmap::set(uint32_t i){
 	int32_t words_zero=(int32_t)((i>>3)-number_word_8bits);
 
 	if(words_zero>=0){
+		number_word_8bits += words_zero+1;
 		if(words_zero<128){
 			buffer.push_back( (uint16_t)(((words_zero)<<8)|dirty_word) );
-			number_word_8bits += words_zero+1;
 		}
 		else{
 			uint32_t max_word_zero=(1<<15)-1;
-			while((uint32_t)words_zero>=max_word_zero){
+			while((uint32_t)words_zero>max_word_zero){
 				buffer.push_back( (uint16_t)(max_word_zero|(1<<15)) );
 				words_zero -= max_word_zero;
-				number_word_8bits += max_word_zero;
 			}
 			buffer.push_back( (uint16_t)((words_zero)|(1<<15)) );
-			number_word_8bits += words_zero+1;
 			buffer.push_back( (uint16_t)dirty_word );
 		}
 	}

@@ -86,7 +86,7 @@ See [main_test].
 [main_test]: main_test.cpp
 
 ## Encoding
-OZBCBitmap encoded bits in 16bits words.
+OZBCBitmap encodes bits in 16bits words.
 There are two types of words:
 
     |1bit type_word=1|        15bit bytes_zero       |
@@ -100,7 +100,7 @@ The max size of this compressed bitmap is twice the size of the same
 uncompressed bitmap.
 
 The max number of consecutive zero bits that can be rappresented
-from a single word is 2^8*2^15 = 2^18bits.
+from a single word is ((2^15)-1)*(2^3)=(2^18)bits.
 
 ## Licensing
 Gnu Lesser General Public Licensev3.0.
@@ -110,3 +110,13 @@ See [OZBCBitmap].
 
 [OZBCBitmap]: /headers/ozbc.h
 
+## Future work
+In the worse case the size of a single OZBC bitmap is twice
+the size of a uncompressed bitmap. [OZBCv2] is a more complicated
+bitmap encode which ensures in the worse case that the size of
+a OZBCv2 bitmap is the same of a uncompressed bitmap and allows
+to compress longer sequences of bits=0. 
+
+The project is in progress [OZBCv2]
+
+[OZBCv2] : https://github.com/uccidibuti/OZBCv2

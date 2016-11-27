@@ -58,16 +58,16 @@ The index size rappresent the effective cost to save K bitmaps on disk.
 |K=16   |              200KBytes|        197Kbytes|        174Kbytes|       161KByte|
 |K=32   |              400KBytes|        347Kbytes|        255Kbytes|       179KByte|
 |K=64   |              799KBytes|        508Kbytes|        317Kbytes|       189KByte|
-|K=128  |             1599KBytes|        633Kbytes|        357Kbytes|       195KByte|
-|K=256  |             3193KBytes|        713Kbytes|        380Kbytes|       202KByte|
-|K=512  |             6371KBytes|        760Kbytes|        396Kbytes|       229KByte|
-|K=1024 |            12676KBytes|        793Kbytes|        413Kbytes|       279KByte|
-|K=2048 |            25089KBytes|        820Kbytes|        459Kbytes|       335KByte|
-|K=4096 |            49170KBytes|        859Kbytes|        573Kbytes|       386KByte|
-|K=8192 |            93918KBytes|        928Kbytes|        675Kbytes|       439KByte|
-|K=16384|           171575KBytes|       1060Kbytes|       1237Kbytes|       516KByte|
-|K=32768|           282254KBytes|       1329Kbytes|       1932Kbytes|       653KByte|
-|K=65536|           399388KBytes|       1905Kbytes|       2941Kbytes|       919KByte|
+|K=128  |             1599KBytes|        633Kbytes|        356Kbytes|       195KByte|
+|K=256  |             3193KBytes|        710Kbytes|        378Kbytes|       202KByte|
+|K=512  |             6371KBytes|        757Kbytes|        392Kbytes|       229KByte|
+|K=1024 |            12676KBytes|        783Kbytes|        405Kbytes|       279KByte|
+|K=2048 |            25089KBytes|        804Kbytes|        443Kbytes|       335KByte|
+|K=4096 |            49170KBytes|        826Kbytes|        504Kbytes|       386KByte|
+|K=8192 |            93918KBytes|        862Kbytes|        741Kbytes|       439KByte|
+|K=16384|           171575KBytes|        929Kbytes|       1105Kbytes|       516KByte|
+|K=32768|           282254KBytes|       1067Kbytes|       1673Kbytes|       653KByte|
+|K=65536|           399388KBytes|       1380Kbytes|       2413Kbytes|       919KByte|
 
 [EWAH]: https://github.com/lemire/EWAHBoolArray
 
@@ -82,6 +82,23 @@ To run main test:
 See [main_test].
 
 [main_test]: main_test.cpp
+
+## Encoding
+OZBCBitmap encoded bits in 16bits words.
+There are two types of words:
+
+    |1bit type_word=1|        15bit bytes_zero       |
+    |1bit type_word=0|7bit bytes_zero|8bit dirty_word|
+
+where:
+- bytes_zero = number of consecutive sequence of 8bit of zeros.
+- dirty_word = sequence of 8bit uncompressed.
+
+The max size of this compressed bitmap is twice the size of the same
+uncompressed bitmap.
+
+The max number of consecutive zero bits that can be rappresented
+from a single word is 2^8*2^15 = 2^18bits.
 
 ## Licensing
 Gnu Lesser General Public Licensev3.0.

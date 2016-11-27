@@ -23,23 +23,18 @@
 #include "bitmap.h"
 
 #define K 16 
-#define K_MAX 1024
+#define K_MAX 65536
 #define N 100000
 
 
-int cmpfunc (const void * a, const void * b){
-   return ( *(uint16_t*)a - *(uint16_t*)b );
-}
-
 
 int main(){
-	printf("START TEST:\n");
+	printf("\nSTART TEST:\n");
 
 	OZBCBitmap *OZBCIndex=NULL;
 	Bitmap *BitmapIndex=NULL;
-	uint16_t k;
 	uint16_t *v=NULL;
-	uint32_t i;
+	uint32_t i, k;
 	v = (uint16_t*)malloc(sizeof(uint16_t)*N);
 	if(v==NULL){
 		printf("Error allocating v\n");
@@ -63,7 +58,7 @@ int main(){
 
 		/*Generate Random Number in [0,k-1] interval*/
 		for(i=0;i<N;i++){
-			v[i] = (uint16_t)rand()%k;
+			v[i] = (uint16_t)(rand()%k);
 		}
 
 		/*Insert Random Number in indeces*/
@@ -79,56 +74,17 @@ int main(){
 			size_BitmapIndex += BitmapIndex[i].sizeBitmapOnDisk();
 		}
 
+		printf("---------------------------------------\n");
+
 		/*Print the size of indices on random number*/
-		printf("\nTest compression on %u random number of range [0,%u] inserted:\n",
+		printf("Test compression on %u random number of range [0,%u] inserted:\n",
 			N,k-1);
-
-		printf("The size of OZBCIndex with k=%u is:%uKBytes\n",
-			k,size_OZBCIndex/1000);
 
 		printf("The size of BitmapIndex with k=%u is:%uKBytes\n",
 			k,size_BitmapIndex/1000);
 
-		printf("The compression ratio is:%f\n",
-			(float)(size_OZBCIndex)/(float)(size_BitmapIndex));
-
-		/*Reset all indexes*/
-		for(i=0;i<k;i++){
-			OZBCIndex[i].resetBitmap();
-			BitmapIndex[i].freeBitmap();
-		}
-
-		/*Sort array*/
-		qsort(v,N,sizeof(uint16_t),cmpfunc);
-
-		/*Insert Sorted Number in indices*/
-		for(i=0;i<N;i++){
-			OZBCIndex[v[i]].set(i);
-			BitmapIndex[v[i]].set(i);
-		}
-
-		size_OZBCIndex=0;
-		size_BitmapIndex=0;
-		/*Get the size of the indices*/
-		for(i=0;i<k;i++){
-			size_OZBCIndex += OZBCIndex[i].sizeBitmapOnDisk();
-			size_BitmapIndex += BitmapIndex[i].sizeBitmapOnDisk();
-		}
-
-		/*Print the size of indices on sorted number*/
-		printf("\nTest compression on %u sorted number of range [0,%u] inserted:\n",
-			N,k-1);
-
 		printf("The size of OZBCIndex with k=%u is:%uKBytes\n",
 			k,size_OZBCIndex/1000);
-
-		printf("The size of BitmapIndex with k=%u is:%uKBytes\n",
-			k,size_BitmapIndex/1000);
-
-		printf("The compression ratio is:%f\n",
-			(float)(size_OZBCIndex)/(float)(size_BitmapIndex));
-
-		printf("-----------------------------------------\n");
 
 		fflush(stdout);
 
@@ -138,6 +94,7 @@ int main(){
 		BitmapIndex = NULL;
 	}
 
+	printf("---------------------------------------\n\n");
 
 	return 0;
 }

@@ -51,6 +51,8 @@ The benchmark compares the size of the Uncompressed,
 [EWAH] and OZBC bitmap index that indexes
 N=100000 random values included in 0,K-1 range. 
 
+Each index is composed from K bitmaps.
+
 The index size rappresent the effective cost to save K bitmaps on disk.
 
 |-      |Uncompressed index size|EWAH32 index size|EWAH16 index size|OZBC index size|

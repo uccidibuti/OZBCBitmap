@@ -114,9 +114,8 @@ See [OZBCBitmap].
 In the worse case the size of a single OZBC bitmap is twice
 the size of a uncompressed bitmap. [OZBCv2] is a more complicated
 bitmap encode which ensures in the worse case that the size of
-a OZBCv2 bitmap is the same of a uncompressed bitmap and allows
-to compress longer sequences of bits=0. 
+a OZBCv2 bitmap is the same of a uncompressed bitmap. 
 
-The project is in progress [OZBCv2]
+The project is in progress [OZBCv2].
 
 [OZBCv2]: https://github.com/uccidibuti/OZBCv2

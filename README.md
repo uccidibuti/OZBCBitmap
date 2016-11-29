@@ -1,4 +1,4 @@
-# OZBC
+# OZBCBitmap
 OZBC provide an efficent compressed bitmap 
 to create a bitmap indexes on high-cardinality columns.
 The library also provide a basic Bitmap class which serve
@@ -118,4 +118,4 @@ a OZBCv2 bitmap is the same of a uncompressed bitmap.
 
 The project is in progress [OZBCv2].
 
-[OZBCv2]: https://github.com/uccidibuti/OZBCv2
+[OZBCv2]: https://github.com/uccidibuti/OZBCv2Bitmap

@@ -14,15 +14,15 @@ Bitmap::Bitmap(){}
 
 
 void Bitmap::set(const uint32_t i){
-	const uint64_t n=(i/64), z=1, size=buffer.size();
+	const uint64_t n=(i>>6), z=1, size=buffer.size();
 
     if(n<size){
-      	buffer[n] = buffer[n]|(z<<(i%64));
+      	buffer[n] = buffer[n]|(z<<(i&63));
       	return;
     }
     else{
       	buffer.resize(n+1);
-      	buffer[n] = buffer[n]|(z<<(i%64));
+      	buffer[n] = buffer[n]|(z<<(i&63));
       	return;
     }	
 }
@@ -171,11 +171,13 @@ std::vector<uint32_t> Bitmap::toArray(){
     std::vector<uint32_t> ans;
     uint32_t i, j, n=buffer.size();
     for(i=0;i<n;i++){
+      if(buffer[i]!=0){
         for(j=0;j<64;j++){
             if( ((buffer[i]>>j)&1)==1 ){
-                ans.push_back( (uint32_t)((n<<6)|j) );
+                ans.push_back( (uint32_t)((i<<6)|j) );
             }
         }
+      }
     }
     return ans;
 }

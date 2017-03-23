@@ -29,9 +29,14 @@ all:
 test:
 	$(CC) main_test.cpp $(IDIR) $(LIB) -o main_test
 	./main_test
-	
+
+example:
+	$(CC) example_index.cpp $(IDIR) $(LIB) -o example_index
+	./example_index
+
 	
 clean:
 	rm -f main_test 
+	rm -f example_index 
 	rm -f *.o
 

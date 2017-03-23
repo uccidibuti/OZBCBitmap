@@ -68,12 +68,15 @@ To compile and generate static library "lib/libOZBC":
 - make
 
 To run main test:
-- make test 
+- make test
+
+To run example index:
+- make example
 
 ## Example
-See [main_test].
+See [Index_example].
 
-[main_test]: main_test.cpp
+[Index_example]: example_index.cpp
 
 ## Encoding
 OZBCBitmap encodes bits in 16bits words.

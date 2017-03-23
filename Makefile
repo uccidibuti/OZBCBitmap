@@ -26,17 +26,25 @@ all:
 	rm -f *.o
 
 
-test:
-	$(CC) main_test.cpp $(IDIR) $(LIB) -o main_test
-	./main_test
+index:
+	$(CC) ./test/index.cpp $(IDIR) $(LIB) -o index
+	./index
 
-example:
-	$(CC) example_index.cpp $(IDIR) $(LIB) -o example_index
-	./example_index
+
+
+perf:
+	$(CC) ./test/perf.cpp $(IDIR) $(LIB) -o perf
+	./perf
+
+	
+serialize:
+	$(CC) ./test/serialize.cpp $(IDIR) $(LIB) -o serialize
+	./serialize
 
 	
 clean:
-	rm -f main_test 
-	rm -f example_index 
+	rm -f index 
+	rm -f perf
+	rm -f serialize 
 	rm -f *.o
 

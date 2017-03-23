@@ -243,14 +243,7 @@ OZBCBitmap OZBCBitmap::logicalor(OZBCBitmap &b){
 
 
 
-uint32_t OZBCBitmap::getNumWords(){
-	return buffer.size();
-}
-
-
-
-
-uint32_t OZBCBitmap::sizeBitmapOnDisk(bool portable){
+uint32_t OZBCBitmap::size(bool portable){
 	if(portable==true)
 		return (buffer.size()*sizeof(uint16_t))+(2*sizeof(uint32_t));
 		
@@ -261,76 +254,75 @@ uint32_t OZBCBitmap::sizeBitmapOnDisk(bool portable){
 
 
 
-uint32_t OZBCBitmap::writeBitmapOnBuffer(char *b,
-	uint32_t len,uint32_t num_words){
+uint32_t OZBCBitmap::write(char *b,
+	uint32_t len,bool write_header){
 
-  uint32_t size_buffer=(uint32_t)buffer.size();
-  uint32_t dim_el=(uint32_t)(sizeof(uint16_t));
-  uint32_t dim_tot=(size_buffer*dim_el);
-  if((num_words==0&&dim_tot+8<=len)||(num_words!=0&&dim_tot+4<=len)){
-    if(num_words==0){
-      memcpy(b,&size_buffer,sizeof(uint32_t));
-      b += (sizeof(uint32_t));
-    }
-    memcpy(b,&number_words_8bits,sizeof(uint32_t));
-    b += (sizeof(uint32_t));
-    memcpy(b,&(buffer[0]),size_buffer*sizeof(uint16_t));
+  	uint32_t size_buffer=(uint32_t)buffer.size();
+  	uint32_t dim_el=(uint32_t)(sizeof(uint16_t));
+  	uint32_t dim_tot=(size_buffer*dim_el);
+  	if((write_header==true&&dim_tot+8<=len)||
+  		(write_header==false&&dim_tot+4<=len)){
+    
+    	if(write_header==true){
+      	memcpy(b,&size_buffer,sizeof(uint32_t));
+      	b += (sizeof(uint32_t));
+    	}
+    	memcpy(b,&number_words_8bits,sizeof(uint32_t));
+    	b += (sizeof(uint32_t));
+    	memcpy(b,&(buffer[0]),size_buffer*sizeof(uint16_t));
 
-    if(num_words==0)
-      return dim_tot+(2*sizeof(uint32_t));
+    	if(write_header==true)
+      		return dim_tot+(2*sizeof(uint32_t));
 
-    return dim_tot+(sizeof(uint32_t));
-  }
-  return 0;
+    	return dim_tot+(sizeof(uint32_t));
+  	}
+  	return 0;
 }
 
 
 
 
-uint32_t OZBCBitmap::readBitmapOnBuffer(char *b,
-  uint32_t len,uint32_t r_num_words){
+uint32_t OZBCBitmap::read(char *b,
+	uint32_t len,uint32_t size){
 
-  uint32_t dim_el=(uint32_t)(sizeof(uint16_t));
-  uint32_t q=0;
-  if(r_num_words==0){
-    memcpy(&r_num_words,b,sizeof(uint32_t));
-    b += (sizeof(uint32_t));
-    q=1;
-  }
-  uint32_t dim_tot=r_num_words*dim_el;
-  if((dim_tot+8<=len&&q==1)||(dim_tot+4<=len&&q!=0)){
-    buffer.resize(r_num_words);
-    memcpy(&number_words_8bits,b,sizeof(uint32_t));
-    b += (sizeof(uint32_t));
-    memcpy(&(buffer[0]),b,r_num_words*sizeof(uint16_t));
-
-    if(q==1)
-      return (dim_el*r_num_words)+(sizeof(uint32_t)*2);
-
-    return (dim_el*r_num_words)+(sizeof(uint32_t));
-  }
-  return 0;
+	uint32_t num_words=0, q=0;
+	if(size==0){
+    	memcpy(&num_words,b,sizeof(uint32_t));
+    	b += (sizeof(uint32_t));
+    	size = num_words*sizeof(uint16_t)+8;
+  	}
+  	else{
+    	num_words = (size-(sizeof(uint32_t))/sizeof(uint16_t));
+	}
+  	if(size<=len){
+    	buffer.resize(num_words);
+    	memcpy(&number_words_8bits,b,sizeof(uint32_t));
+    	b += (sizeof(uint32_t));
+    	memcpy(&(buffer[0]),b,num_words*sizeof(uint16_t));
+    	return size;
+  	}
+  	return 0;
 }
 
 
 
 
-uint32_t OZBCBitmap::writeBitmapOnFile(FILE *f,
-  uint32_t num_words){
+uint32_t OZBCBitmap::writeToFile(FILE *f,
+  bool write_header){
 
   uint32_t tot=0;
   uint32_t size_buffer=(uint32_t)buffer.size();
   uint32_t dim_el=(uint32_t)(sizeof(uint16_t));
   if(f!=NULL){
-    if(num_words==0){      
+    if(write_header==true){      
       tot += fwrite(&size_buffer,sizeof(uint32_t),1,f);
     }
     tot += fwrite(&number_words_8bits,sizeof(uint32_t),1,f);
     tot += fwrite(&(buffer[0]),sizeof(uint16_t),size_buffer,f);
-    if(num_words==0&&tot==(size_buffer+2))
+    if(write_header==true&&tot==(size_buffer+2))
       return size_buffer*dim_el+(2*sizeof(uint32_t));
 
-    else if(tot==(size_buffer+1))
+    else if(write_header==false&&tot==(size_buffer+1))
       return size_buffer*dim_el+(sizeof(uint32_t));
   }
   return 0;
@@ -339,23 +331,24 @@ uint32_t OZBCBitmap::writeBitmapOnFile(FILE *f,
 
 
 
-uint32_t OZBCBitmap::readBitmapOnFile(FILE *f,
-  uint32_t r_num_words){
+uint32_t OZBCBitmap::readFromFile(FILE *f,
+  uint32_t size){
 
   uint32_t dim_el=(uint32_t)(sizeof(uint16_t));
-  uint32_t tot=0;
+  uint32_t tot=0, num_words=0;
   if(f!=NULL){
-    if(r_num_words==0){      
-      tot += fread(&r_num_words,sizeof(uint32_t),1,f);
+    if(size==0){      
+		size = (num_words*sizeof(uint16_t))+8;
     }
-    buffer.resize(r_num_words);
-    tot += fread(&number_words_8bits,sizeof(uint32_t),1,f);
-    tot += fread(&(buffer[0]),sizeof(uint16_t),r_num_words,f);
-    if(tot==(r_num_words+2))
-      return (r_num_words*dim_el)+(2*sizeof(uint32_t));
+    else{
+        num_words = (size-sizeof(uint32_t))/sizeof(uint16_t);
+	}
 
-    else if(tot==(r_num_words+1))
-      return (r_num_words*dim_el)+(sizeof(uint32_t));
+    buffer.resize(num_words);
+    tot += fread(&number_words_8bits,sizeof(uint32_t),1,f);
+    tot += fread(&(buffer[0]),sizeof(uint16_t),num_words,f);
+    if(tot==(num_words+1))
+    	return size;
   }
   return 0;
 }
@@ -363,7 +356,7 @@ uint32_t OZBCBitmap::readBitmapOnFile(FILE *f,
 
 
 
-void OZBCBitmap::printBitmap(FILE *f){
+void OZBCBitmap::print(FILE *f){
 	if(f==NULL)
 		return;
 
@@ -395,7 +388,7 @@ void OZBCBitmap::swap(OZBCBitmap &b){
 
 
 
-OZBCBitmap OZBCBitmap::copyBitmap(){
+OZBCBitmap OZBCBitmap::copy(){
 	OZBCBitmap r;
 	r.buffer = buffer;
 	r.number_words_8bits = number_words_8bits;
@@ -405,7 +398,7 @@ OZBCBitmap OZBCBitmap::copyBitmap(){
 
 
 
-void OZBCBitmap::resetBitmap(){
+void OZBCBitmap::reset(){
 	std::vector<uint16_t> x;
 	x.swap(buffer);
 	number_words_8bits = 0;

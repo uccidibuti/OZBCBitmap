@@ -63,27 +63,11 @@ public:
 
 
 	/*
-		Computes the logical not
-		and return a new OZBCBitmap answer. 
-	*/
-	OZBCBitmap logicalnot();
-
-
-	/*
-		Return the number of words of the
-		bitmap. This method needed
-		to write and read the bitmap without
-		the number of words.  
-	*/
-	uint32_t getNumWords();
-
-
-	/*
 		Return the size of bitmap in bytes
 		+ 4 bytes needed to serialize the bitmap.
 		If portable=false return the size of bitmap in memory.	
 	*/
-	uint32_t sizeBitmapOnDisk(bool portable);
+	uint32_t size(bool portable);
 
 
 	/*
@@ -100,7 +84,7 @@ public:
 
 		If an error occured return 0.
 	*/
-	uint32_t writeBitmapOnBuffer(char *b,uint32_t len,uint32_t num_words);
+	uint32_t write(char *b,uint32_t len,bool write_header);
 
 
 	/*
@@ -115,7 +99,7 @@ public:
 
 		If an error occured return 0. 
 	*/
-  	uint32_t readBitmapOnBuffer(char *b,uint32_t len,uint32_t r_num_words);
+  	uint32_t read(char *b,uint32_t len,uint32_t size);
 
 
 	/*
@@ -131,7 +115,7 @@ public:
 
 		If an error occured return 0.
 	*/
-	uint32_t writeBitmapOnFile(FILE *f,uint32_t num_words);
+	uint32_t writeToFile(FILE *f,bool write_header);
 
 
 	/*
@@ -146,7 +130,7 @@ public:
 
 		If an error occured return 0. 
 	*/
-  	uint32_t readBitmapOnFile(FILE *f,uint32_t r_num_words);
+  	uint32_t readFromFile(FILE *f,uint32_t size);
 
 
 	/*
@@ -156,7 +140,7 @@ public:
 		type_word, bytes_zero and dirty_word are printed in binary.
 		If type_word=1 there isn't dirty_word.
 	*/
-	void printBitmap(FILE *f);
+	void print(FILE *f);
 
 	
 	/*
@@ -168,13 +152,13 @@ public:
 	/*
 		Return a copy of this bitmap.
 	*/
-	OZBCBitmap copyBitmap();
+	OZBCBitmap copy();
 
 
 	/*
 		Reset this bitmap and free buffer memory.
 	*/
-	void resetBitmap();
+	void reset();
 
 
 	/*

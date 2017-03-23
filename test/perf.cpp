@@ -70,7 +70,7 @@ int main(){
 		uint32_t size_OZBCIndex=0, size_BitmapIndex=0;
 		/*Get the size of the indices*/
 		for(i=0;i<k;i++){
-			size_OZBCIndex += OZBCIndex[i].sizeBitmapOnDisk(true);
+			size_OZBCIndex += OZBCIndex[i].size(true);
 		}
 
 		printf("---------------------------------------\n");

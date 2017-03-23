@@ -67,16 +67,20 @@ The index size rappresent the effective cost to save L bitmaps on disk.
 To compile and generate static library "lib/libOZBC":
 - make
 
-To run main test:
-- make test
+To run index test:
+- make index
 
-To run example index:
-- make example
+To run perf test:
+- make perf
+
+To run serialize test:
+- make serialize
+
 
 ## Example
 See [Index_example].
 
-[Index_example]: example_index.cpp
+[Index_example]: ./test/index.cpp
 
 ## Encoding
 OZBCBitmap encodes bits in 16bits words.

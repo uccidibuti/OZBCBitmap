@@ -49,7 +49,7 @@ bitmaps with all bits unsetted and then with a minimal size.
 ## OZBC compared with EWAH and uncompressed Bitmap
 The benchmark compares the size of [Roaring],
 [EWAH] and OZBC bitmap index that indexes
-N=100000 random and sorted values included in 0,L-1 range. 
+N=1000000 (1M) random and sorted values included in 0,L-1 range. 
 
 Each index is composed from L bitmaps.
 

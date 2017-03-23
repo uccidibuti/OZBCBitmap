@@ -26,18 +26,18 @@ all:
 	rm -f *.o
 
 
-index:
+index: ./test/index.cpp
 	$(CC) ./test/index.cpp $(IDIR) $(LIB) -o index
 	./index
 
 
 
-perf:
+perf: ./test/perf.cpp
 	$(CC) ./test/perf.cpp $(IDIR) $(LIB) -o perf
 	./perf
 
 	
-serialize:
+serialize: ./test/serialize.cpp
 	$(CC) ./test/serialize.cpp $(IDIR) $(LIB) -o serialize
 	./serialize
 

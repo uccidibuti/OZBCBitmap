@@ -31,6 +31,7 @@ int main(){
 	OZBCBitmap *OZBCIndex=NULL;
 	uint16_t *v=NULL;
 	uint32_t i;
+
 	v = (uint16_t*)malloc(sizeof(uint16_t)*N);
 	if(v==NULL){
 		printf("Error allocating v\n");
@@ -43,6 +44,8 @@ int main(){
 	for(i=0;i<N;i++){
 		v[i] = (uint16_t)(rand()%65536);
 	}
+	uint16_t to_search=v[X], time_diff=0;
+	struct timeval t1, t2;
 
 	/*Create OZBCIndex*/
 	OZBCIndex = new OZBCBitmap[65536];
@@ -51,18 +54,20 @@ int main(){
 		fflush(stdout);
 		return 1;
 	}
+	gettimeofday(&t1,NULL);
 	for(i=0;i<N;i++){
 		OZBCIndex[v[i]].set(i);
 	}
-
+	gettimeofday(&t2,NULL);
+	time_diff = elapsed_time(&t1,&t2);
+	printf("CREATED INDEX IN %u microsecond\n",time_diff);
+	printf("-----------------------------------\n");
 
 	/*Make an equality-query with index and with linear scan
 	and confront the query-time*/ 
 	printf("MAKE QUERY ON 10M VALUES\n");
 	printf("-----------------------------------\n");
 	
-	uint16_t to_search=v[X], time_diff=0;
-	struct timeval t1, t2;
 	std::vector<uint32_t> result_index, result_scan;
 
 	gettimeofday(&t1,NULL);
@@ -78,6 +83,7 @@ int main(){
 			result_scan.push_back(i);
 		}
 	}
+	gettimeofday(&t2,NULL);	
 	time_diff = elapsed_time(&t1,&t2);
 	printf("Linear Scan make query in: %u microseconds\n",time_diff);
 	printf("-----------------------------------\n");

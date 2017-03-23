@@ -1,7 +1,7 @@
 
 # OZBCBitmap
-OZBC provide an efficent compressed bitmap 
-to create a bitmap indexes on high-cardinality columns.
+OZBC provides an efficent compressed bitmap 
+to create bitmap indexes on high-cardinality columns.
 
 
 ## Introduction

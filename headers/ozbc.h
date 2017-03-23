@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <unistd.h>
+#include <string.h>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -24,23 +25,13 @@
 	The bitmap is rappresented from
 	a vector of 16bits words. 
 	There are two type of words:
-	1): 1bit type_word=1 | 15bit bytes_zero 
-	2): 1bit type_word=0 | 7bit bytes_zero | 8bit dirty_word
-
-	where:
-		bytes_zero = number of consecutive 8bit of zeros:
-			if(type_word=1) => max(bytes_zero)=(2^15)-1 
-			else => max(bytes_zero)=(2^7)-1
-		
-		dirty_word = sequence of 8bits uncompressed.
-
-	The max size of this compressed bitmap is twice the size of the same
-	uncompressed bitmap.
+	1): 1bit type_word=0 | 7bit bytes_zero | 8bit dirty_word
+	2): 1bit type_word=1 | 15bit 128_bytes_zero 
 */
 class OZBCBitmap{
 private:
 	std::vector<uint16_t> buffer;
-	uint32_t number_word_8bits;
+	uint32_t number_words_8bits;
 
 public:	
 	OZBCBitmap();
@@ -58,23 +49,17 @@ public:
 
 
 	/*
-		Append a sequence of 8 dirty-bits. 
-	*/
-	void appendLiteralWord(uint8_t word);
-
-
-	/*
 		Computes the logical and with another OZBCBitmap
 		and return a new OZBCBitmap answer. 
 	*/
-	OZBCBitmap logicaland(OZBCBitmap b);
+	OZBCBitmap logicaland(OZBCBitmap &b);
 
 
 	/*
 		Computes the logical or with another OZBCBitmap
 		and return a new OZBCBitmap answer. 	
 	*/
-	OZBCBitmap logicalor(OZBCBitmap b);
+	OZBCBitmap logicalor(OZBCBitmap &b);
 
 
 	/*
@@ -85,54 +70,83 @@ public:
 
 
 	/*
-		Computes the logical xor with another OZBCBitmap
-		and return a new OZBCBitmap answer. 	
+		Return the number of words of the
+		bitmap. This method needed
+		to write and read the bitmap without
+		the number of words.  
 	*/
-	OZBCBitmap logicalxor(OZBCBitmap b);
+	uint32_t getNumWords();
 
 
 	/*
-		Return the size of buffer + 4 bytes. 
+		Return the size of bitmap in bytes
+		+ 4 bytes needed to serialize the bitmap.
+		If portable=false return the size of bitmap in memory.	
 	*/
-	uint32_t sizeBufferOnDisk();
+	uint32_t sizeBitmapOnDisk(bool portable);
 
 
 	/*
-		Return the size of buffer + 8 bytes.		
+		Write the bitmap on buffer 'b' of length 'len'
+		('len' must be >= then 'return value')
+		and return the number of bytes written:
+			if(num_words==0) 
+				return sizeBitmapOnDisk(true).
+			
+			if(num_words!=0)
+				return sizeBitmapOnDisk(false).
+				**In this case you must store getNumWords()
+					to read the bitmap**
+
+		If an error occured return 0.
 	*/
-	uint32_t sizeBitmapOnDisk();
+	uint32_t writeBitmapOnBuffer(char *b,uint32_t len,uint32_t num_words);
 
 
 	/*
-		Write the bitmap on ostream. The file format is:
-			4 byte for the size of the buffer,
-			4 byte for the number_words_8bit,
-			buffer content.
-		The	number of bytes written are sizeBitmapOnDisk().	
+		Read a bitmap from a buffer 'b' with length 'len'
+		saved with writeBitmapOnBuffer method
+		and return the number of bytes readed.
+		If you have stored the bitmap with num_words!=0,
+		you need to set 'r_num_words' with the getNumWords()
+		of the bitmap. Else if you have stored the bitmap
+		with num_words==0 you don't need to know getNumWords(),
+		in this case you must set 'r_num_words=0'.
+
+		If an error occured return 0. 
 	*/
-	void writeBitmap(std::ostream &out);
+  	uint32_t readBitmapOnBuffer(char *b,uint32_t len,uint32_t r_num_words);
 
 
 	/*
-		Write the buffer on ostream. The file format is:
-			4 byte for the number_words_8bit,
-			buffer content.
-		The	number of bytes written are sizeBufferOnDisk().	
+		Write the bitmap on file 'f'
+		and return the number of bytes written:
+			if(num_words==0) 
+				return sizeBitmapOnDisk(true).
+			
+			if(num_words!=0)
+				return sizeBitmapOnDisk().
+				**In this case you must store getNumWords(false)
+					to read the bitmap**
+
+		If an error occured return 0.
 	*/
-	void writeBuffer(std::ostream &out);
+	uint32_t writeBitmapOnFile(FILE *f,uint32_t num_words);
 
 
 	/*
-		Read a bitmap saved with writeBitmap method from istream. 
-	*/
-	void readBitmap(std::istream &in);
+		Read a bitmap from a file 'f'
+		saved with writeBitmapOnFile method
+		and return the number of bytes readed.
+		If you have stored the bitmap with num_words!=0,
+		you need to set 'r_num_words' with the getNumWords()
+		of the bitmap. Else if you have stored the bitmap
+		with num_words==0 you don't need to know getNumWords(),
+		in this case you must set 'r_num_words=0'.
 
-
-	/*
-		Read a bitmap saved with writeBuffer method from istream.
-		You need know the size of the buffer. 
+		If an error occured return 0. 
 	*/
-	void readBuffer(std::istream &in,size_t size_buffer);
+  	uint32_t readBitmapOnFile(FILE *f,uint32_t r_num_words);
 
 
 	/*

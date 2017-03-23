@@ -9,10 +9,10 @@ FLAGSLIB=-O3
 IDIR=-I./headers 
 	
 
-SOURCE=./src/ozbc.cpp ./src/bitmap.cpp	
+SOURCE=./src/ozbc.cpp	
 	
 
-OBJECT=ozbc.o bitmap.o
+OBJECT=ozbc.o
 	
 	
 LIB=-L./lib -lOZBC

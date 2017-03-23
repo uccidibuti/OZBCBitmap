@@ -58,6 +58,8 @@ int main(){
 
 	/*Make an equality-query with index and with linear scan
 	and confront the query-time*/ 
+	printf("MAKE QUERY ON 10M VALUES\n");
+	printf("-----------------------------------\n");
 	
 	uint16_t to_search=v[X], time_diff=0;
 	struct timeval t1, t2;
@@ -67,7 +69,7 @@ int main(){
 	result_index = OZBCIndex[to_search].toVector();
 	gettimeofday(&t2,NULL);
 	time_diff = elapsed_time(&t1,&t2);
-	printf("OZBCIndex make query in: %u microseconds\n",time_diff);
+	printf("OZBCIndex make query in: %u microseconds on %u values\n",time_diff);
 	printf("-----------------------------------\n");
 
 	gettimeofday(&t1,NULL);

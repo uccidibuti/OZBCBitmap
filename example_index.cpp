@@ -69,7 +69,7 @@ int main(){
 	result_index = OZBCIndex[to_search].toVector();
 	gettimeofday(&t2,NULL);
 	time_diff = elapsed_time(&t1,&t2);
-	printf("OZBCIndex make query in: %u microseconds on %u values\n",time_diff);
+	printf("OZBCIndex make query in: %u microseconds\n",time_diff);
 	printf("-----------------------------------\n");
 
 	gettimeofday(&t1,NULL);

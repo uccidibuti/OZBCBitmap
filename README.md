@@ -54,9 +54,9 @@ Each index is composed from L bitmaps.
 
 The index size rappresent the effective cost to save L bitmaps on disk.
 
-![Alt text](./logo/size_unsorted?raw=true "")
+![Alt text](./pictures/size_unsorted?raw=true "")
 
-![Alt text](./logo/size_sorted?raw=true "")
+![Alt text](./pictures/size_sorted?raw=true "")
 
 
 [EWAH]: https://github.com/lemire/EWAHBoolArray

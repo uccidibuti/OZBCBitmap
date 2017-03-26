@@ -106,5 +106,5 @@ Gnu Lesser General Public Licensev3.0.
 ## Structure and API of OZBCBitmap
 See [OZBCBitmap].
 
-[OZBCBitmap]: /headers/ozbc.h
+[OZBCBitmap]: /headers/ozbcbitmap.h
 

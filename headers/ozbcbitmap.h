@@ -5,8 +5,8 @@
 
 	(c) Lorenzo Vannucci
 */
-#ifndef OZBC
-#define OZBC
+#ifndef OZBCBITMAP
+#define OZBCBITMAP
 
 
 #include <stdio.h>

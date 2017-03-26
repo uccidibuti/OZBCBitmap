@@ -1,7 +1,7 @@
 #ifndef MACROOZBC
 #define MACROOZBC
 
-#include "ozbc.h"
+#include "ozbcbitmap.h"
 
 
 

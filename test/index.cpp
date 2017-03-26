@@ -16,7 +16,7 @@
 #include <time.h>
 #include <inttypes.h>
 #include <vector>
-#include "ozbc.h"
+#include "ozbcbitmap.h"
 
 #define N 10000000 //10M
 #define X 100

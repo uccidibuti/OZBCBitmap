@@ -19,7 +19,7 @@
 #include <sys/time.h>
 #include <time.h>
 #include <inttypes.h>
-#include "ozbc.h"
+#include "ozbcbitmap.h"
 
 #define K 16 
 #define K_MAX 65536

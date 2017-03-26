@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <vector>
-#include "ozbc.h"
+#include "ozbcbitmap.h"
 
 int main(){
 	OZBCBitmap bitmap;

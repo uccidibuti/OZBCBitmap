@@ -5,8 +5,8 @@
     
     (c) Lorenzo Vannucci
 */
-#include "ozbc.h"
-#include "macro.h"
+#include "ozbcbitmap.h"
+#include "ozbcmacro.h"
 
 OZBCBitmap::OZBCBitmap(){
 	number_words_8bits = 0;
@@ -292,7 +292,7 @@ uint32_t OZBCBitmap::read(char *b,
     	size = num_words*sizeof(uint16_t)+8;
   	}
   	else{
-    	num_words = (size-(sizeof(uint32_t))/sizeof(uint16_t));
+    	num_words = ((size-sizeof(uint32_t))/sizeof(uint16_t));
 	}
   	if(size<=len){
     	buffer.resize(num_words);
@@ -301,6 +301,7 @@ uint32_t OZBCBitmap::read(char *b,
     	memcpy(&(buffer[0]),b,num_words*sizeof(uint16_t));
     	return size;
   	}
+  	number_words_8bits = 0;
   	return 0;
 }
 
@@ -350,6 +351,7 @@ uint32_t OZBCBitmap::readFromFile(FILE *f,
     if(tot==(num_words+1))
     	return size;
   }
+  number_words_8bits = 0;
   return 0;
 }
 

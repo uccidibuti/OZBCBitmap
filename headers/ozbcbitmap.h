@@ -84,7 +84,7 @@ public:
 	*
 	*	If an error occured return 0.
 	*/
-	uint32_t write(char *b,uint32_t len,bool write_header);
+	uint32_t writeToBuffer(char *b,uint32_t len,bool write_header);
 
 
 	/**
@@ -99,7 +99,7 @@ public:
 	*
 	*	If an error occured return 0. 
 	*/
-  	uint32_t read(char *b,uint32_t len,uint32_t size);
+  	uint32_t readFromBuffer(char *b,uint32_t len,uint32_t size);
 
 
 	/**
@@ -131,6 +131,21 @@ public:
 	*	If an error occured return 0. 
 	*/
   	uint32_t readFromFile(FILE *f,uint32_t size);
+
+
+	/**
+	*	Read a bitmap from a file descriptor fd
+	*	saved with writeBitmapOnFile method
+	*	and return the number of bytes readed.
+	*	If you have stored the bitmap with num_words!=0,
+	*	you need to set 'r_num_words' with the getNumWords()
+	*	of the bitmap. Else if you have stored the bitmap
+	*	with num_words==0 you don't need to know getNumWords(),
+	*	in this case you must set 'r_num_words=0'.
+	*
+	*	If an error occured return 0. 
+	*/
+  	uint32_t readFromFile(int fd,uint32_t size);
 
 
 	/**

@@ -254,7 +254,7 @@ uint32_t OZBCBitmap::size(bool portable){
 
 
 
-uint32_t OZBCBitmap::write(char *b,
+uint32_t OZBCBitmap::writeToBuffer(char *b,
 	uint32_t len,bool write_header){
 
   	uint32_t size_buffer=(uint32_t)buffer.size();
@@ -282,7 +282,7 @@ uint32_t OZBCBitmap::write(char *b,
 
 
 
-uint32_t OZBCBitmap::read(char *b,
+uint32_t OZBCBitmap::readFromBuffer(char *b,
 	uint32_t len,uint32_t size){
 
 	uint32_t num_words=0, q=0;
@@ -325,7 +325,7 @@ uint32_t OZBCBitmap::writeToFile(FILE *f,
 
     else if(write_header==false&&tot==(size_buffer+1))
       return size_buffer*dim_el+(sizeof(uint32_t));
-  }
+  	}
   return 0;
 }
 
@@ -333,23 +333,50 @@ uint32_t OZBCBitmap::writeToFile(FILE *f,
 
 
 uint32_t OZBCBitmap::readFromFile(FILE *f,
+  	uint32_t size){
+
+  	uint32_t dim_el=(uint32_t)(sizeof(uint16_t));
+  	uint32_t tot=0, num_words=0;
+  	if(f!=NULL){
+    	if(size==0){      
+      		fread(&num_words,sizeof(uint32_t),1,f);      
+			size = (num_words*sizeof(uint16_t))+8;
+    	}	
+    	else{
+        	num_words = (size-sizeof(uint32_t))/sizeof(uint16_t);
+		}
+    	buffer.resize(num_words);
+    	tot += fread(&number_words_8bits,sizeof(uint32_t),1,f);
+    	tot += fread(&(buffer[0]),sizeof(uint16_t),num_words,f);
+    	if(tot==(num_words+1))
+    		return size;
+  	}
+  	number_words_8bits = 0;
+  	return 0;
+}
+
+
+
+
+uint32_t OZBCBitmap::readFromFile(int fd,
   uint32_t size){
 
   uint32_t dim_el=(uint32_t)(sizeof(uint16_t));
   uint32_t tot=0, num_words=0;
-  if(f!=NULL){
-    if(size==0){      
-		size = (num_words*sizeof(uint16_t))+8;
+  if(fd>=0){
+    if(size==0){
+      read(fd,(void*)&num_words,sizeof(uint32_t));      
+      size = (num_words*sizeof(uint16_t))+8;
     }
     else{
-        num_words = (size-sizeof(uint32_t))/sizeof(uint16_t);
-	}
+      num_words = (size-sizeof(uint32_t))/sizeof(uint16_t);
+    }
 
     buffer.resize(num_words);
-    tot += fread(&number_words_8bits,sizeof(uint32_t),1,f);
-    tot += fread(&(buffer[0]),sizeof(uint16_t),num_words,f);
-    if(tot==(num_words+1))
-    	return size;
+    tot += read((int)fd,(void*)&number_words_8bits,sizeof(uint32_t));
+    tot += read((int)fd,(void*)&(buffer[0]),sizeof(uint16_t)*num_words);
+    if( tot==((num_words*sizeof(uint16_t))+sizeof(uint32_t)) )
+      return size;
   }
   number_words_8bits = 0;
   return 0;

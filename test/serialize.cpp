@@ -33,7 +33,7 @@ int main(){
 		return 1;
 	}
 
-	r = bitmap.write(buffer,size,true);
+	r = bitmap.writeToBuffer(buffer,size,true);
 	if(r==0){
 		printf("Failed write\n");
 		fflush(stdout);
@@ -41,7 +41,7 @@ int main(){
 	}
 	bitmap.reset();
 
-	r = bitmap.read(buffer,size,0);
+	r = bitmap.readFromBuffer(buffer,size,0);
 	if(r==0){
 		printf("Failed write\n");
 		fflush(stdout);

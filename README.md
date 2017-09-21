@@ -32,7 +32,7 @@ In this scenario to minimize the size of the index (composed
 from L bitmap) is very important compress bits=0 sequences in
 efficient mode.
 
-Unlike WAH, EWAH, COMPAX and others compressed bitmap which
+Unlike WAH, EWAH, and others compressed bitmap which
 can compress also sequences of bits=1 and ensure that in the
 worse case the size of a compressed bitmap is the same of
 a uncompressed bitmap, OZBC can compress only sequences of 

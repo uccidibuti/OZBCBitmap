@@ -10,7 +10,7 @@ to work well for low-cardinality columns,
 which have a modest number of distinct values.
 The simplest and most common method of bitmap indexing 
 on attribute A with K cardinality associates a bitmap
-with every attribute value V then the Vth bitmap rappresent
+with every attribute value V then the Vth bitmap rapresent
 the predicate A=V. 
 This approach ensures an efficient solution for performing
 search but on high-cardinality attributes the size of the 
@@ -53,7 +53,7 @@ N=1000000 (1M) random and sorted values included in 0,L-1 range.
 
 Each index is composed from L bitmaps.
 
-The index size rappresent the effective cost to save L bitmaps on disk.
+The index size rapresent the effective cost to save L bitmaps on disk.
 
 ![Alt text](./pictures/size_unsorted.jpg?raw=true "")
 
@@ -97,7 +97,7 @@ where:
 The max size of this compressed bitmap is twice the size of the same
 uncompressed bitmap.
 
-The max number of consecutive zero bits that can be rappresented
+The max number of consecutive zero bits that can be rapresented
 from a single word is ((2^15)-1)*(2^10)=(2^25)bits.
 
 ## Licensing

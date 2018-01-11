@@ -86,19 +86,19 @@ See [Index_example].
 OZBCBitmap encodes bits in 16bits words.
 There are two types of words:
 
-    |1bit type_word=0|7bit    bytes_zero|8bit     dirty_word|
+    |1bit type_word=0|7bit    bytes_zero|8bit     dirty_byte|
     |1bit type_word=1|         15bit 128_bytes_zero         |
 
 where:
 - bytes_zero = number of consecutive sequence of 8bit of zeros.
-- dirty_word = sequence of 8bit uncompressed.
+- dirty_byte = sequence of 8bit uncompressed.
 - 128_bytes_zero = number of consecutive sequence of 1024bit of zeros.
 
 The max size of this compressed bitmap is twice the size of the same
 uncompressed bitmap.
 
 The max number of consecutive zero bits that can be rapresented
-from a single word is ((2^15)-1)*(2^10)=(2^25)bits.
+from a single word is ((2^15) - 1) * (2^10) = (2^25 - 2^10) bits.
 
 ## Licensing
 Gnu Lesser General Public Licensev3.0.

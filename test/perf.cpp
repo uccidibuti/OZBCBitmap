@@ -19,6 +19,7 @@
 #include <sys/time.h>
 #include <time.h>
 #include <inttypes.h>
+#include <vector>
 #include "ozbcbitmap.h"
 
 #define K 16 

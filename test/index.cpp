@@ -18,7 +18,7 @@
 #include <vector>
 #include "ozbcbitmap.h"
 
-uint64_t N = 1*100*1000*1000;
+uint64_t N = (1 * 100 * 1000 * 1000);
 #define X 100
 
 uint32_t elapsed_time(struct timeval *t1, struct timeval *t2){
@@ -36,58 +36,59 @@ int main(int argc, char **argv){
 
 	printf("\nSTART EXAMPLE INDEX\n");
 
-	OZBCBitmap *OZBCIndex=NULL;
-	uint16_t *v=NULL;
+	OZBCBitmap *OZBCIndex = NULL;
+	uint16_t *v = NULL;
 	uint32_t i;
 
-	v = (uint16_t*)malloc(sizeof(uint16_t)*N);
-	if(v==NULL){
+	v = (uint16_t*)malloc(sizeof(uint16_t) * N);
+	if(v == NULL) {
 		printf("Error allocating v\n");
 		fflush(stdout);
 		return 1;
 	}
 
 	struct timeval t1, t2;
-	uint16_t to_search=v[X];
-        uint32_t time_diff=0;
+	uint16_t to_search = v[X];
+    uint32_t time_diff = 0;
 
 	/*Generate Random Number in [0,k-1] interval*/
-
 	srand(time(NULL));
 
-	gettimeofday(&t1,NULL);
+	gettimeofday(&t1, NULL);
 
-	for(i=0;i<N;i++){
-		v[i] = (uint16_t)(rand()%65536);
+	for(i = 0; i < N; i++) {
+		v[i] = (uint16_t)(rand() % 0xFFFF);
 	}
 
-	gettimeofday(&t2,NULL);
-	time_diff = elapsed_time(&t1,&t2);
+	gettimeofday(&t2, NULL);
+	time_diff = elapsed_time(&t1, &t2);
 
-	printf("GENERATED RANDOMS #s IN %u microsecond (%9.6f seconds)\n",time_diff, time_diff / (float) 1000000);
+	printf("GENERATED RANDOMS #s IN %u microsecond (%9.6f seconds)\n", time_diff,
+			time_diff / (float) 1000000);
 	printf("-----------------------------------\n");
-        fflush(stdout);
+    fflush(stdout);
 
 	/*Create OZBCIndex*/
 	OZBCIndex = new OZBCBitmap[65536];
-	if(OZBCIndex==NULL){
+	if(OZBCIndex == NULL){
 		printf("Error allocating 65536 bitmap\n");
 		fflush(stdout);
 		return 1;
 	}
 
-	gettimeofday(&t1,NULL);
+	gettimeofday(&t1, NULL);
 
-	for(i=0;i<N;i++){
+	for(i = 0; i < N; i++) {
 		OZBCIndex[v[i]].set(i);
 	}
 
-	gettimeofday(&t2,NULL);
-	time_diff = elapsed_time(&t1,&t2);
+	gettimeofday(&t2, NULL);
+	time_diff = elapsed_time(&t1, &t2);
 
-	printf("CREATED INDEX IN %u microsecond (%9.6f seconds)\n",time_diff, time_diff / (float) 1000000);
+	printf("CREATED INDEX IN %u microsecond (%9.6f seconds)\n",time_diff,
+			time_diff / (float) 1000000);
 	printf("-----------------------------------\n");
-        fflush(stdout);
+    fflush(stdout);
 
 	/*Make an equality-query with index and with linear scan
 	and confront the query-time*/ 
@@ -97,39 +98,41 @@ int main(int argc, char **argv){
 	
 	std::vector<uint32_t> result_index, result_scan;
 
-	gettimeofday(&t1,NULL);
+	gettimeofday(&t1, NULL);
 
 	result_index = OZBCIndex[to_search].toVector();
 
-	gettimeofday(&t2,NULL);
-	time_diff = elapsed_time(&t1,&t2);
+	gettimeofday(&t2, NULL);
+	time_diff = elapsed_time(&t1, &t2);
 
-	printf("OZBCIndex make query in: %u microseconds (%9.6f seconds)\n",time_diff, time_diff / (float) 1000000);
+	printf("OZBCIndex make query in: %u microseconds (%9.6f seconds)\n",time_diff,
+			time_diff / (float) 1000000);
 	printf("-----------------------------------\n");
-        fflush(stdout);
+    fflush(stdout);
 
 	gettimeofday(&t1,NULL);
 
-	for(i=0;i<N;i++){
-		if(v[i]==to_search){
+	for(i = 0; i < N; i++) {
+		if(v[i] == to_search) {
 			result_scan.push_back(i);
 		}
 	}
 
-	gettimeofday(&t2,NULL);	
-	time_diff = elapsed_time(&t1,&t2);
+	gettimeofday(&t2, NULL);	
+	time_diff = elapsed_time(&t1, &t2);
 
-	printf("Linear Scan make query in: %u microseconds (%9.6f seconds)\n",time_diff, time_diff / (float) 1000000);
+	printf("Linear Scan make query in: %u microseconds (%9.6f seconds)\n",time_diff,
+			time_diff / (float) 1000000);
 	printf("-----------------------------------\n");
-        fflush(stdout);
+    fflush(stdout);
 
 	/*Check the result*/
-	if(result_index.size()!=result_scan.size()){
+	if(result_index.size() != result_scan.size()) {
 		printf("There is an error in OZBVBitmap\n");
 		return 1;
 	}
-	for(i=0;i<result_scan.size();i++){
-		if(result_index[i]!=result_scan[i]){
+	for(i = 0; i < result_scan.size(); i++) {
+		if(result_index[i] != result_scan[i]) {
 			printf("There is an error in OZBVBitmap\n");
 			return 1;
 		}

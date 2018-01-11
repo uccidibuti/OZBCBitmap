@@ -25,13 +25,13 @@
 	The bitmap is rappresented from
 	a vector of 16bits words. 
 	There are two type of words:
-	1): 1bit type_word=0 | 7bit bytes_zero | 8bit dirty_word
+	1): 1bit type_word=0 | 7bit bytes_zero | 8bit byte_word
 	2): 1bit type_word=1 | 15bit 128_bytes_zero 
 */
 class OZBCBitmap{
 private:
 	std::vector<uint16_t> buffer;
-	uint32_t number_words_8bits;
+	uint32_t num_bytes;
 
 public:	
 	OZBCBitmap();
@@ -74,86 +74,67 @@ public:
 	*	Write the bitmap on buffer 'b' of length 'len'
 	*	('len' must be >= then 'return value')
 	*	and return the number of bytes written:
-	*		if(num_words==0) 
+	*		if(write_header == 0) 
 	*			return sizeBitmapOnDisk(true).
 	*		
-	*		if(num_words!=0)
+	*		if(write_header != 0)
 	*			return sizeBitmapOnDisk(false).
-	*			**In this case you must store getNumWords()
-	*				to read the bitmap**
 	*
 	*	If an error occured return 0.
 	*/
-	uint32_t writeToBuffer(char *b,uint32_t len,bool write_header);
+	uint32_t writeToBuffer(char *b, uint32_t len, bool write_header);
 
 
 	/**
 	*	Read a bitmap from a buffer 'b' with length 'len'
 	*	saved with writeBitmapOnBuffer method
 	*	and return the number of bytes readed.
-	*	If you have stored the bitmap with num_words!=0,
-	*	you need to set 'r_num_words' with the getNumWords()
+	*	If you have stored the bitmap with write_header != 0,
+	*	you need to set 'size'
 	*	of the bitmap. Else if you have stored the bitmap
-	*	with num_words==0 you don't need to know getNumWords(),
-	*	in this case you must set 'r_num_words=0'.
+	*	with num_words==0 you don't need to know the bitmap size,
+	*	in this case you must set 'size = 0'.
 	*
 	*	If an error occured return 0. 
 	*/
-  	uint32_t readFromBuffer(char *b,uint32_t len,uint32_t size);
+  	uint32_t readFromBuffer(char *b, uint32_t len, uint32_t size);
 
 
 	/**
 	*	Write the bitmap on file 'f'
 	*	and return the number of bytes written:
-	*		if(num_words==0) 
+	*		if(write_header == 0) 
 	*			return sizeBitmapOnDisk(true).
 	*		
-	*		if(num_words!=0)
+	*		if(write_header != 0)
 	*			return sizeBitmapOnDisk().
-	*			**In this case you must store getNumWords(false)
-	*				to read the bitmap**
 	*
 	*	If an error occured return 0.
 	*/
-	uint32_t writeToFile(FILE *f,bool write_header);
+	uint32_t writeToFile(FILE *f, bool write_header);
 
 
 	/**
 	*	Read a bitmap from a file 'f'
 	*	saved with writeBitmapOnFile method
 	*	and return the number of bytes readed.
-	*	If you have stored the bitmap with num_words!=0,
-	*	you need to set 'r_num_words' with the getNumWords()
+	*	If you have stored the bitmap with write_header != 0,
+	*	you need to set 'size'
 	*	of the bitmap. Else if you have stored the bitmap
-	*	with num_words==0 you don't need to know getNumWords(),
-	*	in this case you must set 'r_num_words=0'.
+	*	with write_header == 0 you don't need to know bitmap size,
+	*	in this case you must set 'size = 0'.
 	*
 	*	If an error occured return 0. 
 	*/
-  	uint32_t readFromFile(FILE *f,uint32_t size);
-
-
-	/**
-	*	Read a bitmap from a file descriptor fd
-	*	saved with writeBitmapOnFile method
-	*	and return the number of bytes readed.
-	*	If you have stored the bitmap with num_words!=0,
-	*	you need to set 'r_num_words' with the getNumWords()
-	*	of the bitmap. Else if you have stored the bitmap
-	*	with num_words==0 you don't need to know getNumWords(),
-	*	in this case you must set 'r_num_words=0'.
-	*
-	*	If an error occured return 0. 
-	*/
-  	uint32_t readFromFile(int fd,uint32_t size);
+  	uint32_t readFromFile(FILE *f, uint32_t size);
 
 
 	/**
 	*	Print on file each word of buffer in this format:
-	*		type_word|bytes_zero|dirty_word
+	*		type_word|bytes_zero|dirty_byte
 	*
 	*	type_word, bytes_zero and dirty_word are printed in binary.
-	*	If type_word=1 there isn't dirty_word.
+	*	If type_word=1 there isn't dirty_byte.
 	*/
 	void print(FILE *f);
 

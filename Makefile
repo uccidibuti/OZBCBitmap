@@ -9,7 +9,7 @@ SOURCE=./src/ozbcbitmap.cpp
 	
 OBJECT=ozbcbitmap.o
 	
-LIBOZBCBITMAP=./lib/libOZBCBitmap
+LIBOZBCBITMAP=./lib/libOZBCBitmap.a
 
 LIB=$(LIBOZBCBITMAP)
 

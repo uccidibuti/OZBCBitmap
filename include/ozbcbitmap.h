@@ -19,8 +19,8 @@
 	The bitmap is rappresented from
 	a vector of 16bits words. 
 	There are two type of words:
-	1): 1bit type_word=0 | 7bit bytes_zero | 8bit byte_word
-	2): 1bit type_word=1 | 15bit 128_bytes_zero 
+	1): 1bit word_type=0 | 7bit bytes_zero | 8bit byte_word
+	2): 1bit word_type=1 | 15bit 128_bytes_zero 
 */
 class OZBCBitmap{
 private:
@@ -125,10 +125,10 @@ public:
 
 	/**
 	*	Print on file each word of buffer in this format:
-	*		type_word|bytes_zero|dirty_byte
+	*		word_type|bytes_zero|dirty_byte
 	*
-	*	type_word, bytes_zero and dirty_word are printed in binary.
-	*	If type_word=1 there isn't dirty_byte.
+	*	word_type, bytes_zero and dirty_word are printed in binary.
+	*	If word_type=1 there isn't dirty_byte.
 	*/
 	void print(FILE *f);
 

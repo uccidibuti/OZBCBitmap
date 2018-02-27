@@ -64,17 +64,17 @@ The index size rapresent the effective cost to save L bitmaps on disk.
 [Roaring]: https://github.com/RoaringBitmap/CRoaring
 
 ## How to compile
-To compile and generate static library "lib/libOZBC":
+To compile and generate static library "lib/libOZBCBitmap" and test:
 - make
 
 To run index test:
-- make index
+- ./index
 
 To run perf test:
-- make perf
+- ./perf
 
 To run serialize test:
-- make serialize
+- ./serialize
 
 
 ## Example
@@ -86,8 +86,8 @@ See [Index_example].
 OZBCBitmap encodes bits in 16bits words.
 There are two types of words:
 
-    |1bit type_word=0|7bit    bytes_zero|8bit     dirty_byte|
-    |1bit type_word=1|         15bit 128_bytes_zero         |
+    |1bit word_type=0|7bit    bytes_zero|8bit     dirty_byte|
+    |1bit word_type=1|         15bit 128_bytes_zero         |
 
 where:
 - bytes_zero = number of consecutive sequence of 8bit of zeros.
@@ -106,5 +106,5 @@ Gnu Lesser General Public Licensev3.0.
 ## Structure and API of OZBCBitmap
 See [OZBCBitmap].
 
-[OZBCBitmap]: /headers/ozbcbitmap.h
+[OZBCBitmap]: /include/ozbcbitmap.h
 

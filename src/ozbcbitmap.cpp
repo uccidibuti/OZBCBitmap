@@ -92,10 +92,10 @@
 
 #define ALIGN_OR_0_1(scanned_bytes1, scanned_bytes2,                           \
 		     bytes_in_word1, bytes_in_word2, i, j,                             \
-		     v1, v2, bytes_zero_to_add, count_bytes, dirty_byte, r)            \
+		     v1, v2, bytes_zero, count_bytes, dirty_byte, r)            \
   ALIGN_OR_1_0(scanned_bytes2, scanned_bytes1,                                 \
 	       bytes_in_word2, bytes_in_word1, j, i,                               \
-	       v2, v1, bytes_zero_to_add, count_bytes, dirty_byte, r);
+	       v2, v1, bytes_zero, count_bytes, dirty_byte, r);
 
 
 /*----------------------------------------------------------------------------*/
@@ -178,7 +178,7 @@ OZBCBitmap OZBCBitmap::logicaland(OZBCBitmap &b) {
 	OZBCBitmap r;
 
 	uint16_t *v1 = NULL, *v2 = NULL;
-	uint8_t type_word = 0, dirty_byte = 0;
+	uint8_t word_type = 0, dirty_byte = 0;
 	uint32_t bytes_in_word1 = 0, bytes_in_word2 = 0, bytes_zero = 0;
 		
 	v1 = &(buffer[0]);
@@ -186,8 +186,8 @@ OZBCBitmap OZBCBitmap::logicaland(OZBCBitmap &b) {
 		
 
 	while(i < n1 && j < n2){
-		type_word = (uint8_t)( (v1[i] >> 15) | ((v2[j] >> 14) & 2) );
-		switch(type_word) {
+		word_type = (uint8_t)( (v1[i] >> 15) | ((v2[j] >> 14) & 2) );
+		switch(word_type) {
 			case 0:
 				bytes_in_word1 = (v1[i] >> 8) + 1;
 				bytes_in_word2 = (v2[j] >> 8) + 1;
@@ -223,7 +223,7 @@ OZBCBitmap OZBCBitmap::logicaland(OZBCBitmap &b) {
 			i--;
 		}
 
-		else if(type_word == 0) {
+		else if(word_type == 0) {
 			bytes_zero = scanned_bytes1 - count_bytes - 1;
 			dirty_byte = (uint8_t)(v1[i - 1] & v2[j - 1]);
 			if(dirty_byte != 0){
@@ -261,7 +261,7 @@ OZBCBitmap OZBCBitmap::logicalor(OZBCBitmap &b) {
 	OZBCBitmap r;
 
 	uint16_t *v1 = NULL, *v2 = NULL;
-	uint8_t type_word = 0, dirty_byte = 0;
+	uint8_t word_type = 0, dirty_byte = 0;
 	uint32_t bytes_in_word1 = 0, bytes_in_word2 = 0, bytes_zero = 0;
 		
 	v1 = &(buffer[0]);
@@ -269,8 +269,8 @@ OZBCBitmap OZBCBitmap::logicalor(OZBCBitmap &b) {
 		
 	//make or
 	while(i < n1 && j < n2) {
-		type_word = (uint8_t)( (v1[i] >> 15) | ((v2[j] >> 14) & 2) );
-		switch(type_word) {
+		word_type = (uint8_t)( (v1[i] >> 15) | ((v2[j] >> 14) & 2) );
+		switch(word_type) {
 			case 0:
 				bytes_in_word1 = (v1[i] >> 8) + 1;
 				bytes_in_word2 = (v2[j] >> 8) + 1;
@@ -311,8 +311,8 @@ OZBCBitmap OZBCBitmap::logicalor(OZBCBitmap &b) {
 	r.num_bytes = num_bytes;
 
 	if(i >= n1 && j < n2) {
-		type_word = (uint8_t)(v2[j] >> 15);
-		switch(type_word) {
+		word_type = (uint8_t)(v2[j] >> 15);
+		switch(word_type) {
 			case 0:
 				dirty_byte = (uint8_t)v2[j];
 				scanned_bytes2 += (v2[j] >> 8) + 1;
@@ -336,8 +336,8 @@ OZBCBitmap OZBCBitmap::logicalor(OZBCBitmap &b) {
 		r.num_bytes = b.num_bytes;
 	}
 	else if(j >=n2 && i < n1) {
-		type_word = (uint8_t)(v1[i] >> 15);
-		switch(type_word) {
+		word_type = (uint8_t)(v1[i] >> 15);
+		switch(word_type) {
 			case 0:
 				dirty_byte = (uint8_t)v1[i];
 				scanned_bytes1 += (v1[i] >> 8) + 1;
@@ -542,14 +542,14 @@ void OZBCBitmap::reset() {
 
 std::vector<uint32_t> OZBCBitmap::toVector() {
 	uint32_t i, j, n = buffer.size(), pos_set = 0;
-	uint8_t type_word = 0, dirty_byte = 0;
+	uint8_t word_type = 0, dirty_byte = 0;
 	uint32_t bytes_zero = 0;
 	std::vector<uint32_t> result;
 
 	for(i = 0; i < n; i++) {
-		type_word = (buffer[i] >> 15) & 1;
+		word_type = (buffer[i] >> 15) & 1;
 			
-		switch(type_word) {
+		switch(word_type) {
 			case 0:
 				bytes_zero = (uint16_t)(buffer[i] >> 8);
 				pos_set += (uint32_t)(bytes_zero << 3);

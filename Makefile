@@ -21,12 +21,10 @@ TESTS = $(TEST_1) $(TEST_2) $(TEST_3)
 
 #------------------------------------------------------------
 
-
-
 all: $(LIBOZBCBITMAP) $(TESTS)
 
 $(LIBOZBCBITMAP):
-	$(CPP) $(SOURCE) $(IDIR) $(FLAGSLIB) -c
+	$(CPP) $(SOURCE) $(IDIR) $(CPPFLAGS) -c
 	ar rvs $(LIBOZBCBITMAP) $(OBJECT)
 	rm -f *.o
 

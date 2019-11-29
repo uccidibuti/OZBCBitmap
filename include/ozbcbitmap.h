@@ -27,6 +27,8 @@ private:
 	std::vector<uint16_t> buffer;
 	uint32_t num_bytes;
 
+	OZBCBitmap logical_or_xor(OZBCBitmap &b, bool is_or);
+
 public:	
 	OZBCBitmap();
 
@@ -55,7 +57,14 @@ public:
 	*/
 	OZBCBitmap logicalor(OZBCBitmap &b);
 
+  
+	/**
+	*	Computes the logical xor with another OZBCBitmap
+	*	and return a new OZBCBitmap answer. 	
+	*/
+	OZBCBitmap logicalxor(OZBCBitmap &b);
 
+  
 	/**
 	*	Return the size of bitmap in bytes
 	*	+ 4 bytes needed to serialize the bitmap.

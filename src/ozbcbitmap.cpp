@@ -23,33 +23,37 @@
 /*----------------------------------------------------------------------------*/
 
 
-#define ALIGN_OR_0_0(scanned_bytes1, scanned_bytes2,                           \
-    bytes_in_word1, bytes_in_word2, i, j,                                      \
-	v1, v2, bytes_zero, count_bytes, dirty_byte, r)                            \
-	scanned_bytes1 += bytes_in_word1;                                          \
-	scanned_bytes2 += bytes_in_word2;                                          \
-	i++;                                                                       \
-	j++;                                                                       \
-	if(scanned_bytes1 < scanned_bytes2) {                                      \
+#define ALIGN_OR_0_0(scanned_bytes1, scanned_bytes2,                                   \
+    bytes_in_word1, bytes_in_word2, i, j,                                              \
+	v1, v2, bytes_zero, count_bytes, dirty_byte, r, is_or)                         \
+	scanned_bytes1 += bytes_in_word1;                                              \
+	scanned_bytes2 += bytes_in_word2;                                              \
+	i++;                                                                           \
+	j++;                                                                           \
+	if(scanned_bytes1 < scanned_bytes2) {                                          \
 		scanned_bytes2 -= bytes_in_word2;                                      \
 		j--;                                                                   \
 		bytes_zero = scanned_bytes1 - count_bytes - 1;                         \
 		count_bytes = scanned_bytes1;                                          \
 		dirty_byte = (uint8_t)v1[i - 1];                                       \
 		r.buffer.push_back((uint16_t)((bytes_zero << 8) | dirty_byte));        \
-	}                                                                          \
-	else if(scanned_bytes1 > scanned_bytes2) {                                 \
+	}                                                                              \
+	else if(scanned_bytes1 > scanned_bytes2) {                                     \
 		scanned_bytes1 -= bytes_in_word1;                                      \
 		i--;                                                                   \
 		bytes_zero = scanned_bytes2 - count_bytes - 1;                         \
 		count_bytes = scanned_bytes2;                                          \
 		dirty_byte = (uint8_t)v2[j - 1];                                       \
 		r.buffer.push_back((uint16_t)((bytes_zero << 8) | dirty_byte));        \
-	}                                                                          \
-	else {                                                                     \
+	}                                                                              \
+	else {                                                                         \
 		bytes_zero = scanned_bytes1 - count_bytes - 1;                         \
 		count_bytes = scanned_bytes1;                                          \
-		dirty_byte = (uint8_t)(v1[i - 1] | v2[j - 1]);                         \
+		if (is_or == true) {                                                   \
+			dirty_byte = (uint8_t)(v1[i - 1] | v2[j - 1]);                 \
+		} else {                                                               \
+			dirty_byte = (uint8_t)(v1[i - 1] ^ v2[j - 1]);                 \
+		}                                                                      \
 		r.buffer.push_back((uint16_t)((bytes_zero << 8) | dirty_byte));        \
 	}
 
@@ -57,29 +61,29 @@
 /*----------------------------------------------------------------------------*/
 
 
-#define ALIGN_OR_1_0(scanned_bytes1, scanned_bytes2,                           \
-	bytes_in_word1, bytes_in_word2, i, j,                                      \
-	v1, v2, bytes_zero, count_bytes, dirty_byte, r)                            \
-	scanned_bytes1 += bytes_in_word1;                                          \
-	scanned_bytes2 += bytes_in_word2;                                          \
-	i++;                                                                       \
-	j++;                                                                       \
-	if(scanned_bytes1 < scanned_bytes2) {                                      \
+#define ALIGN_OR_1_0(scanned_bytes1, scanned_bytes2,                                   \
+	bytes_in_word1, bytes_in_word2, i, j,                                          \
+	v1, v2, bytes_zero, count_bytes, dirty_byte, r)                                \
+	scanned_bytes1 += bytes_in_word1;                                              \
+	scanned_bytes2 += bytes_in_word2;                                              \
+	i++;                                                                           \
+	j++;                                                                           \
+	if(scanned_bytes1 < scanned_bytes2) {                                          \
 		scanned_bytes2 -= bytes_in_word2;                                      \
 		j--;                                                                   \
 		bytes_zero = scanned_bytes1 - count_bytes - 1;                         \
 		count_bytes = scanned_bytes1;                                          \
 		dirty_byte = (uint8_t)v1[i - 1];                                       \
 		r.buffer.push_back((uint16_t)((bytes_zero << 8) | dirty_byte));        \
-	}                                                                          \
-	else if(scanned_bytes1 > scanned_bytes2) {                                 \
+	}                                                                              \
+	else if(scanned_bytes1 > scanned_bytes2) {                                     \
 		scanned_bytes1 -= bytes_in_word1;                                      \
 		i--;                                                                   \
 		bytes_zero = scanned_bytes2 - count_bytes - 1;                         \
 		count_bytes = scanned_bytes2;                                          \
 		r.buffer.push_back((uint16_t)((bytes_zero << 8) | 0));                 \
-	}                                                                          \
-	else {                                                                     \
+	}                                                                              \
+	else {                                                                         \
 		bytes_zero = scanned_bytes1 - count_bytes - 1;                         \
 		count_bytes = scanned_bytes1;                                          \
 		dirty_byte = (uint8_t)(v1[i - 1]);                                     \
@@ -90,41 +94,41 @@
 /*----------------------------------------------------------------------------*/
 
 
-#define ALIGN_OR_0_1(scanned_bytes1, scanned_bytes2,                           \
+#define ALIGN_OR_0_1(scanned_bytes1, scanned_bytes2,                                   \
 		     bytes_in_word1, bytes_in_word2, i, j,                             \
-		     v1, v2, bytes_zero, count_bytes, dirty_byte, r)            \
-  ALIGN_OR_1_0(scanned_bytes2, scanned_bytes1,                                 \
-	       bytes_in_word2, bytes_in_word1, j, i,                               \
+		     v1, v2, bytes_zero, count_bytes, dirty_byte, r)                   \
+  ALIGN_OR_1_0(scanned_bytes2, scanned_bytes1,                                         \
+	       bytes_in_word2, bytes_in_word1, j, i,                                   \
 	       v2, v1, bytes_zero, count_bytes, dirty_byte, r);
 
 
 /*----------------------------------------------------------------------------*/
 
 
-#define ALIGN_OR_1_1(scanned_bytes1, scanned_bytes2,                           \
-  bytes_in_word1, bytes_in_word2, i, j,                                        \
-	v1, v2, bytes_zero, count_bytes, dirty_byte, r)                            \
-	scanned_bytes1 += bytes_in_word1;                                          \
-	scanned_bytes2 += bytes_in_word2;                                          \
-	i++;                                                                       \
-	j++;                                                                       \
-	if(scanned_bytes1 < scanned_bytes2) {                                      \
+#define ALIGN_OR_1_1(scanned_bytes1, scanned_bytes2,                                   \
+  bytes_in_word1, bytes_in_word2, i, j,                                                \
+	v1, v2, bytes_zero, count_bytes, dirty_byte, r)                                \
+	scanned_bytes1 += bytes_in_word1;                                              \
+	scanned_bytes2 += bytes_in_word2;                                              \
+	i++;                                                                           \
+	j++;                                                                           \
+	if(scanned_bytes1 < scanned_bytes2) {                                          \
 		scanned_bytes2 -= bytes_in_word2;                                      \
 		j--;                                                                   \
 		bytes_zero = scanned_bytes1 - count_bytes - 1;                         \
 		count_bytes = scanned_bytes1;                                          \
 		r.buffer.push_back((uint16_t)( (1 << 15) | ((bytes_zero) >> 7)) );     \
 		r.buffer.push_back((uint16_t)( ((bytes_zero) & 127) << 8) );           \
-	}                                                                          \
-	else if(scanned_bytes1 > scanned_bytes2) {                                 \
+	}                                                                              \
+	else if(scanned_bytes1 > scanned_bytes2) {                                     \
 		scanned_bytes1 -= bytes_in_word1;                                      \
 		i--;                                                                   \
 		bytes_zero = scanned_bytes2 - count_bytes - 1;                         \
 		count_bytes = scanned_bytes2;                                          \
 		r.buffer.push_back((uint16_t)( (1 << 15) | ((bytes_zero) >> 7)) );     \
 		r.buffer.push_back((uint16_t)( ((bytes_zero) & 127) << 8) );           \
-	}                                                                          \
-	else {                                                                     \
+	}                                                                              \
+	else {                                                                         \
 		bytes_zero = scanned_bytes1 - count_bytes - 1;                         \
 		count_bytes = scanned_bytes1;                                          \
 		r.buffer.push_back((uint16_t)( (1 << 15) | ((bytes_zero) >> 7)) );     \
@@ -256,6 +260,19 @@ OZBCBitmap OZBCBitmap::logicaland(OZBCBitmap &b) {
 
 
 OZBCBitmap OZBCBitmap::logicalor(OZBCBitmap &b) {
+  return OZBCBitmap::logical_or_xor(b, true);
+}
+
+/*----------------------------------------------------------------------------*/
+
+OZBCBitmap OZBCBitmap::logicalxor(OZBCBitmap &b) {
+  return OZBCBitmap::logical_or_xor(b, false);
+}
+
+
+/*----------------------------------------------------------------------------*/
+
+OZBCBitmap OZBCBitmap::logical_or_xor(OZBCBitmap &b, bool is_or) {
 	uint32_t i = 0, j = 0, n1 = buffer.size(), n2 = b.buffer.size();
 	uint32_t scanned_bytes1 = 0, scanned_bytes2 = 0, count_bytes = 0;
 	OZBCBitmap r;
@@ -276,7 +293,7 @@ OZBCBitmap OZBCBitmap::logicalor(OZBCBitmap &b) {
 				bytes_in_word2 = (v2[j] >> 8) + 1;
 				ALIGN_OR_0_0(scanned_bytes1, scanned_bytes2,
 					bytes_in_word1, bytes_in_word2, i, j,
-					v1, v2, bytes_zero, count_bytes, dirty_byte, r);
+					v1, v2, bytes_zero, count_bytes, dirty_byte, r, is_or);
 				break;
 
 			case 1:
@@ -318,6 +335,7 @@ OZBCBitmap OZBCBitmap::logicalor(OZBCBitmap &b) {
 				scanned_bytes2 += (v2[j] >> 8) + 1;
 				bytes_zero = scanned_bytes2 - count_bytes - 1;
 				r.buffer.push_back((uint16_t)((bytes_zero << 8) | dirty_byte));
+
 				break;
 			case 1:
 				scanned_bytes2 += ((uint32_t)(v2[j] & OZBC_MAX_128_BYTES_ZERO)) << 7;
@@ -360,8 +378,8 @@ OZBCBitmap OZBCBitmap::logicalor(OZBCBitmap &b) {
 		}
 	}
 	return r;
-}
 
+}
 
 /*----------------------------------------------------------------------------*/
 

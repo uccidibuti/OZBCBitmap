@@ -4,8 +4,11 @@ OZBC provides an efficent compressed bitmap
 to create bitmap indexes on high-cardinality columns.
 
 ## Deprecation notice
-This repo is scheduled for deprecation in favor of [bitrush-index] and [ozbcbitmap].
+This library is scheduled for deprecation in favor of ozbcbitmap in [bitrush-index].
 All new features development is happening in bitrush-index.
+
+[bitrush-index]: https://github.com/uccidibuti/bitrush-index
+
 
 ## Introduction
 Bitmap indexes have traditionally been considered
